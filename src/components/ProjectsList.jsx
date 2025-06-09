@@ -3,10 +3,23 @@ import { fetchProjects } from '../services/api';
 
 const ProjectsList = () => {
   const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetchProjects().then(setProjects).catch(console.error);
+    fetchProjects()
+      .then((data) => setProjects(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   }, []);
+
+  if (loading) {
+    return <p className="p-4">Caricamento...</p>;
+  }
+
+  if (error) {
+    return <p className="p-4 text-red-600">Errore: {error}</p>;
+  }
 
   return (
     <div className="p-4">
